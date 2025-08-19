@@ -17,9 +17,13 @@ class Point08NegativeFloat(BaseChecker):
     
     def check(self, schedule_lines: List[ScheduleLine]) -> Dict[str, Any]:
         """Check for negative float values."""
-        # This is a placeholder since float data isn't in our current CSV format
-        # In a real implementation, you'd check for negative float values
+        negative_float_count = 0
         failed_tasks = []
         
-        # For now, assume no negative float found
-        return self.format_result(True, "0", failed_tasks)
+        for task in schedule_lines:
+            if task.total_slack < 0:
+                negative_float_count += 1
+                failed_tasks.append(f"{task.unique_id}: {task.task_name} ({task.total_slack} days)")
+        
+        passed = negative_float_count == 0
+        return self.format_result(passed, str(negative_float_count), failed_tasks)

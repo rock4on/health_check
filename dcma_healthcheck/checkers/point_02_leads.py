@@ -16,10 +16,16 @@ class Point02Leads(BaseChecker):
         )
     
     def check(self, schedule_lines: List[ScheduleLine]) -> Dict[str, Any]:
-        """Check for negative lag values."""
-        # This is a placeholder since lag data isn't in our current CSV format
-        # In a real implementation, you'd check dependency lag values
+        """Check for negative lag values in predecessor relationships."""
         failed_tasks = []
+        negative_lag_count = 0
         
-        # For now, assume no negative lags found
-        return self.format_result(True, "0", failed_tasks)
+        for task in schedule_lines:
+            # Check predecessors for lag indicators (e.g., "76FS-5 days")
+            for pred in task.predecessors:
+                if 'FS-' in pred or 'SS-' in pred or 'FF-' in pred or 'SF-' in pred:
+                    negative_lag_count += 1
+                    failed_tasks.append(f"{task.unique_id}: {task.task_name} (predecessor: {pred})")
+        
+        passed = negative_lag_count == 0
+        return self.format_result(passed, str(negative_lag_count), failed_tasks)

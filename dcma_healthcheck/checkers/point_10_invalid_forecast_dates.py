@@ -17,22 +17,26 @@ class Point10InvalidForecastDates(BaseChecker):
         )
     
     def check(self, schedule_lines: List[ScheduleLine]) -> Dict[str, Any]:
-        """Check for invalid forecast dates."""
-        # Using current date as data date for this example
+        """Check for invalid forecast dates (planned dates before data date for incomplete work)."""
+        # Using current date as data date
         data_date = datetime.now().date()
         failed_tasks = []
+        invalid_count = 0
         
         for task in schedule_lines:
-            # Check if task is not completed and has dates before data date
-            if task.start_date and task.start_date.date() < data_date:
-                # This would be invalid if the task hasn't started yet
-                # In real implementation, you'd check actual start vs planned start
-                pass
-            
-            if task.finish_date and task.finish_date.date() < data_date:
-                # This would be invalid if the task hasn't finished yet
-                # In real implementation, you'd check actual finish vs planned finish
-                pass
+            # Check incomplete tasks with planned dates in the past
+            if task.status not in ['Complete', 'Completed']:
+                # Check planned start date
+                if (task.start_date and task.start_date.date() < data_date and 
+                    not task.actual_start):
+                    invalid_count += 1
+                    failed_tasks.append(f"{task.unique_id}: {task.task_name} (planned start: {task.start_date.strftime('%m/%d/%y')})")
+                
+                # Check planned finish date
+                if (task.finish_date and task.finish_date.date() < data_date and 
+                    not task.actual_finish):
+                    invalid_count += 1
+                    failed_tasks.append(f"{task.unique_id}: {task.task_name} (planned finish: {task.finish_date.strftime('%m/%d/%y')})")
         
-        # For now, assume no invalid forecast dates
-        return self.format_result(True, "0", failed_tasks)
+        passed = invalid_count == 0
+        return self.format_result(passed, str(invalid_count), failed_tasks)

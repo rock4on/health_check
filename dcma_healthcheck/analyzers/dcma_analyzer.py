@@ -55,19 +55,38 @@ class DCMAAnalyzer:
             'results': results
         }
     
-    def process_csv_file(self, file_path: str) -> Dict[str, Any]:
+    def process_csv_file(self, file_path: str, has_headers: bool = True) -> Dict[str, Any]:
         """Process a CSV file and analyze it."""
         schedule_lines = []
         
         try:
-            with open(file_path, 'r') as file:
-                for line_num, line in enumerate(file, 1):
-                    if line.strip():
-                        try:
-                            schedule_line = ScheduleLine.from_csv_line(line)
-                            schedule_lines.append(schedule_line)
-                        except Exception as e:
-                            print(f"Error parsing line {line_num}: {e}")
+            with open(file_path, 'r', encoding='utf-8') as file:
+                lines = file.readlines()
+                
+                if has_headers and lines:
+                    # Parse with headers
+                    headers = [h.strip() for h in lines[0].split('\t')]
+                    
+                    for line_num, line in enumerate(lines[1:], 2):
+                        if line.strip():
+                            try:
+                                values = [v.strip() for v in line.split('\t')]
+                                # Create dictionary from headers and values
+                                data_dict = dict(zip(headers, values))
+                                schedule_line = ScheduleLine.from_csv_with_headers(data_dict)
+                                schedule_lines.append(schedule_line)
+                            except Exception as e:
+                                print(f"Error parsing line {line_num}: {e}")
+                else:
+                    # Parse without headers (old method)
+                    for line_num, line in enumerate(lines, 1):
+                        if line.strip():
+                            try:
+                                schedule_line = ScheduleLine.from_csv_line(line)
+                                schedule_lines.append(schedule_line)
+                            except Exception as e:
+                                print(f"Error parsing line {line_num}: {e}")
+                                
         except FileNotFoundError:
             return {'error': f"File not found: {file_path}"}
         

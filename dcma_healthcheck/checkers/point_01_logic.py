@@ -23,7 +23,7 @@ class Point01Logic(BaseChecker):
         # Filter out start and milestone tasks
         regular_tasks = [
             line for line in schedule_lines 
-            if line.wbs_code not in ['START', 'CMPLT', 'MLSTN']
+            if line.wbs_std not in ['START', 'CMPLT', 'MLSTN']
         ]
         
         if not regular_tasks:

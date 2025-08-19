@@ -1,0 +1,6 @@
+Unique ID	ID	WBS STD	WBS	Task Name	% Complete	Status	Start	Finish	Actual Start	Actual Finish	Duration	Actual Duration	Predecessors	Successors	Unique ID Predecessors	Unique ID Successors	Constraint Type	Constraint Date	Free Slack	Total Slack	Critical
+0	0	PRJT	0	ACX HYD 04-9.6 MW	87%	Complete	Tue 2/1/22	Sat 9/7/24	Tue 2/1/22	NA	779.88 days	674.76 days			13149		As Soon As Possible	NA	0 days	0 days	Yes
+13149	1	START	1	Project Start Date	0%	Late	Tue 2/1/22	Tue 2/1/22	NA	NA	0 days	0 days		13150			As Soon As Possible	NA	779.88 days	779.88 days	No
+13150	2	CMPLT	2	Project Completion Date	0%	Future Task	Fri 8/30/24	Fri 8/30/24	NA	NA	0 days	0 days	1417,1411,35,48,36,42,43,47,1422,1424,1428,1418,147,1423,1427,1426,1215,1216,1242		9356,10054,10126,10982,10128,12071,12070,10981,12006,12007,12009,9355,10714,12260,12262,12834,12971,12972,12998	Finish No Earlier Than	Fri 8/30/24	6 days	6 days	No
+10788	3	MLSTN	3	Milestone	0%	Late	Tue 2/1/22	Fri 8/30/24	Tue 2/1/22	NA	773.88 days	0 days		9544			As Soon As Possible	NA	6 days	6 days	No
+9544	4	MLSTN_2	3.1	Customer Milestones	100%	Complete	Tue 2/1/22	Wed 11/9/22	Tue 2/1/22	Wed 11/9/22	228 days	228 days		9538			As Soon As Possible	NA	0 days	0 days	No

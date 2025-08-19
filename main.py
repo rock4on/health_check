@@ -7,7 +7,7 @@ def main():
     analyzer = DCMAAnalyzer()
     
     # Analyze the sample schedule
-    results = analyzer.process_csv_file('sample_schedule.csv')
+    results = analyzer.process_csv_file('sample_with_headers.csv', has_headers=True)
     
     # Generate and print report
     report = analyzer.generate_report(results)

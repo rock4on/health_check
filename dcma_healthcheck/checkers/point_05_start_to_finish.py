@@ -17,9 +17,14 @@ class Point05StartToFinish(BaseChecker):
     
     def check(self, schedule_lines: List[ScheduleLine]) -> Dict[str, Any]:
         """Check for Start-to-Finish relationships."""
-        # This is a placeholder since relationship type data isn't in our current CSV format
-        # In a real implementation, you'd check for SF dependencies
+        sf_count = 0
         failed_tasks = []
         
-        # For now, assume no SF relationships found
-        return self.format_result(True, "0", failed_tasks)
+        for task in schedule_lines:
+            for pred in task.predecessors:
+                if 'SF' in pred:
+                    sf_count += 1
+                    failed_tasks.append(f"{task.unique_id}: {task.task_name} (SF with {pred})")
+        
+        passed = sf_count == 0
+        return self.format_result(passed, str(sf_count), failed_tasks)
